@@ -1,0 +1,65 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import NowWatching from "../components/NowWatching.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { siteConfig } from "../config/site";
+import { projects } from "../data/projects";
+import { url } from "../utils/url";
+
+const featured = projects.slice(0, 3);
+const akaHtml = siteConfig.aka.map((name) => `<strong>${name}</strong>`).join(" and ");
+const github = siteConfig.social.find((link) => link.network === "github")?.url;
+---
+
+<Base description={siteConfig.tagline}>
+  <header>
+    <h1 class="page__title">{siteConfig.name}</h1>
+    <p class="page__lead tagline">
+      {siteConfig.title} at {siteConfig.college} · {siteConfig.role}
+    </p>
+  </header>
+
+  <section class="page__content">
+    <h2>About</h2>
+    <p>{siteConfig.bio}</p>
+    <p>
+      I go by <Fragment set:html={akaHtml} />. I keep a running log of everything I watch on{" "}
+      <a href="https://github.com/psb-001/cinephile" target="_blank" rel="noopener noreferrer">
+        cinephile
+      </a>, one commit per movie and per episode. When I'm not pushing code for the CDC Club,
+      I'm interning at <strong>{siteConfig.internship}</strong>.
+    </p>
+
+    <ul class="lead-links">
+      <li>
+        <a class="btn" href={url("/projects")}>See my projects</a>
+      </li>
+      <li>
+        <a
+          class="btn btn--inverse"
+          href={github}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Icon name="github" class="icon" />
+          GitHub
+        </a>
+      </li>
+      <li>
+        <a class="btn btn--inverse" href={url("/about")}>
+          <Icon name="link" class="icon" />
+          More about me
+        </a>
+      </li>
+    </ul>
+
+    <NowWatching />
+
+    <h2>Featured projects</h2>
+    <ul class="projects__grid">
+      {featured.map((project) => <li><ProjectCard project={project} /></li>)}
+    </ul>
+    <p><a href={url("/projects")}>All projects →</a></p>
+  </section>
+</Base>

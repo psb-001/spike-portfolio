@@ -1,0 +1,25 @@
+---
+import Base from "../layouts/Base.astro";
+import { siteConfig } from "../config/site";
+import { url } from "../utils/url";
+---
+
+<Base title="Page not found" description="This page does not exist.">
+  <header>
+    <h1 class="page__title">404</h1>
+    <p class="page__lead">That frame is missing from the reel.</p>
+  </header>
+
+  <section class="page__content">
+    <p>The page you were looking for does not exist. Try one of these instead:</p>
+    <ul>
+      {
+        siteConfig.nav.map((item) => (
+          <li>
+            <a href={url(item.url)}>{item.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

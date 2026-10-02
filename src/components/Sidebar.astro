@@ -1,0 +1,91 @@
+---
+/**
+ * Author sidebar: avatar, name, title, bio and social links.
+ *
+ * Mark-up and class names mirror the Academic Pages `_includes/author-profile.html`
+ * so the hand-written CSS in `src/styles/global.css` applies unchanged.
+ */
+import Icon from "./Icon.astro";
+import NowWatching from "./NowWatching.astro";
+import { siteConfig } from "../config/site";
+import { url } from "../utils/url";
+
+const { name, title, bio, avatar, location, social } = siteConfig;
+---
+
+<div itemscope itemtype="http://schema.org/Person">
+  <div class="author__avatar">
+    <img
+      src={url(avatar)}
+      class="author__avatar"
+      alt={name}
+      width="175"
+      height="175"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </div>
+
+  <div class="author__content">
+    <h3 class="author__name">{name}</h3>
+    <p class="author__pronouns">{title}</p>
+    <p class="author__bio">{bio}</p>
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button
+      class="btn btn--inverse"
+      type="button"
+      id="author-urls-toggle"
+      aria-expanded="false"
+      aria-controls="author-urls"
+    >
+      Follow
+    </button>
+    <ul class="author__urls social-icons" id="author-urls">
+      {
+        location && (
+          <li class="author__desktop">
+            <Icon name="location" class="icon-pad-right" />
+            {location}
+          </li>
+        )
+      }
+      {
+        siteConfig.role && (
+          <li class="author__desktop">
+            <Icon name="building" class="icon-pad-right" />
+            {siteConfig.role}
+          </li>
+        )
+      }
+      {
+        social.map((link) => (
+          <li>
+            <a href={link.url} target="_blank" rel="noopener noreferrer me">
+              <Icon name={link.network} class="icon-pad-right" />
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<NowWatching variant="compact" />
+
+<script>
+  // On narrow screens the social links collapse behind the "Follow" button.
+  const toggle = document.getElementById("author-urls-toggle");
+  const list = document.getElementById("author-urls");
+
+  if (toggle && list) {
+    toggle.addEventListener("click", () => {
+      const isOpen = list.getAttribute("data-open") === "true";
+      list.setAttribute("data-open", String(!isOpen));
+      list.style.display = isOpen ? "none" : "block";
+      toggle.setAttribute("aria-expanded", String(!isOpen));
+    });
+  }
+</script>

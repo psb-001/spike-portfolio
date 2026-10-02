@@ -1,0 +1,101 @@
+---
+/**
+ * "Now watching" widget.
+ *
+ * Reads `src/data/now-watching.json`, which is generated at build time by
+ * `scripts/fetch-movie.mjs` from the TMDB API. The API key only ever exists in
+ * the build environment - nothing from TMDB beyond the public title/poster is
+ * shipped to the browser.
+ */
+import Icon from "./Icon.astro";
+import nowWatching from "../data/now-watching.json";
+import { siteConfig } from "../config/site";
+import { url } from "../utils/url";
+
+/**
+ * Shape of `src/data/now-watching.json`.
+ *
+ * The file is generated at build time, so it is typed here instead of being
+ * inferred: a failed fetch leaves `null` fields behind and the widget has to
+ * render that state gracefully.
+ */
+interface NowWatchingData {
+  id: number | null;
+  type: "movie" | "tv" | string | null;
+  title: string | null;
+  tagline: string | null;
+  overview: string | null;
+  /** Locally cached poster under `public/`, e.g. `/posters/now-watching.jpg`. */
+  poster: string | null;
+  /** Remote poster on image.tmdb.org, used when no local copy was cached. */
+  posterUrl: string | null;
+  year: number | null;
+  rating: number | null;
+  genres: string[];
+  tmdbUrl: string | null;
+  fetchedAt: string | null;
+  status: "ok" | "placeholder" | string | null;
+  error: string | null;
+}
+
+interface Props {
+  /** `compact` is the sidebar-sized variant. */
+  variant?: "default" | "compact";
+  /** Overrides `siteConfig.nowWatchingHeading`. */
+  heading?: string;
+}
+
+const { variant = "default", heading } = Astro.props;
+
+const item = nowWatching as NowWatchingData;
+const poster = item.poster ?? item.posterUrl;
+const isCompact = variant === "compact";
+const title = item.title || "Nothing set yet";
+const detail = [item.year, item.rating ? `${item.rating.toFixed(1)}/10` : null]
+  .filter((value): value is string | number => value !== null)
+  .join(" · ");
+const creditHref =
+  "https://github.com/psb-001/spike-portfolio/blob/master/src/config/site.ts";
+---
+
+<section class:list={["now-watching", isCompact && "now-watching--compact"]}>
+  <h2 class="now-watching__title">{heading ?? siteConfig.nowWatchingHeading}</h2>
+  <div class="now-watching__body">
+    {
+      poster ? (
+        <img
+          class="now-watching__poster"
+          src={url(poster)}
+          alt={`Poster for ${title}`}
+          width="92"
+          height="138"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div class="now-watching__poster now-watching__poster--placeholder" aria-hidden="true">
+          <Icon name="film" size="28" />
+        </div>
+      )
+    }
+    <div>
+      <h3 class="now-watching__name">
+        {item.tmdbUrl ? (
+          <a href={item.tmdbUrl} target="_blank" rel="noopener noreferrer">{title}</a>
+        ) : (
+          title
+        )}
+      </h3>
+      {detail && <p class="now-watching__meta">{detail}</p>}
+      <p class="now-watching__meta">
+        {item.type === "tv" ? "Series" : "Movie"}
+      </p>
+    </div>
+  </div>
+  {!isCompact && (
+    <p class="now-watching__credit">
+      This product uses the TMDB API but is not endorsed or certified by TMDB.{" "}
+      <a href={creditHref} target="_blank" rel="noopener noreferrer">Change what I'm watching →</a>
+    </p>
+  )}
+</section>

@@ -1,0 +1,95 @@
+---
+/**
+ * Base layout - the shell every page renders into.
+ *
+ * Mirrors the Academic Pages `default.html` structure:
+ *   masthead -> #main (sidebar + article.page) -> .page__footer
+ */
+import Nav from "../components/Nav.astro";
+import Sidebar from "../components/Sidebar.astro";
+import Icon from "../components/Icon.astro";
+import { siteConfig } from "../config/site";
+import { url } from "../utils/url";
+
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+const pageTitle = title ? `${title} | ${siteConfig.name}` : `${siteConfig.name} - ${siteConfig.title}`;
+const metaDescription = description ?? siteConfig.tagline;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" type="image/svg+xml" href={url("favicon.svg")} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical.href} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+
+    <meta name="generator" content={Astro.generator} />
+  </head>
+
+  <body>
+    <Nav />
+
+    <div id="main" role="main">
+      <div class="sidebar sticky">
+        <Sidebar />
+      </div>
+
+      <article class="page">
+        <div class="page__inner-wrap">
+          <slot />
+        </div>
+      </article>
+    </div>
+
+    <div class="page__footer">
+      <footer>
+        <div class="page__footer-follow">
+          <ul class="social-icons">
+            {
+              siteConfig.social.map((link) => (
+                <li>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer me">
+                    <Icon name={link.network} size="14" />
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="page__footer-copyright">
+          &copy; {year} {siteConfig.name} ({siteConfig.aka.join(" / ")}).{" "}
+          Built with{" "}
+          <a href="https://astro.build" rel="noopener noreferrer">Astro</a>{" "}
+          and styled after the{" "}
+          <a href="https://github.com/academicpages/academicpages.github.io" rel="noopener noreferrer">
+            Academic Pages
+          </a>{" "}
+          theme.
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
