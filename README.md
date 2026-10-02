@@ -76,8 +76,12 @@ The site is built for a GitHub Pages sub-path, so every link is prefixed with
 ## Deployment
 
 Pushes to `master` (the default branch) run `.github/workflows/deploy.yml`,
-which builds the site and publishes `dist/` to the `gh-pages` branch with
-[peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages).
+which builds the site and publishes `dist/` into `spike-portfolio/` on the
+`gh-pages` branch with
+[peaceiris/actions-gh-pages](https://github.com/peaceiris/actions-gh-pages) —
+so the live URL is <https://psb-001.github.io/spike-portfolio/>. The site's
+`base` is `/spike-portfolio` to match, and the repo root keeps a small redirect
+stub.
 
 Repository secrets required:
 
