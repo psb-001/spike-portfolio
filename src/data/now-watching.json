@@ -1,0 +1,16 @@
+{
+  "id": 1399,
+  "type": "tv",
+  "title": "Game of Thrones",
+  "tagline": null,
+  "overview": null,
+  "poster": null,
+  "posterUrl": null,
+  "year": null,
+  "rating": null,
+  "genres": [],
+  "tmdbUrl": "https://www.themoviedb.org/tv/1399",
+  "fetchedAt": null,
+  "status": "placeholder",
+  "error": null
+}

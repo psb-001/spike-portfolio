@@ -1,0 +1,99 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import { siteConfig } from "../config/site";
+import { url } from "../utils/url";
+
+const { education, experience, skills } = siteConfig;
+---
+
+<Base title="About" description={siteConfig.bio}>
+  <header>
+    <h1 class="page__title">About me</h1>
+    <p class="page__lead">{siteConfig.tagline}</p>
+  </header>
+
+  <section class="page__content">
+    <img
+      src={url(siteConfig.avatar)}
+      alt={siteConfig.name}
+      class="profile-photo"
+      width="175"
+      height="175"
+      loading="lazy"
+      decoding="async"
+    />
+
+    <h2>The short version</h2>
+    <p>{siteConfig.bio}</p>
+    <p>
+      Currently a second-year computer engineering student at {siteConfig.college}, where I
+      also lead the software side of the Career Development Cell (CDC) club as its
+      <strong>{siteConfig.role}</strong>. Outside of college I am interning at{" "}
+      <strong>{siteConfig.internship}</strong>.
+    </p>
+    <p>
+      You'll mostly find me building small tools that make life a little less annoying -
+      desktop timers, watch trackers, little web experiments - and then rewriting them
+      because they weren't quite as nice as I wanted.
+    </p>
+
+    <h2>Education</h2>
+    <ul class="timeline">
+      {
+        education.map((entry) => (
+          <li class="timeline__item">
+            <h3>{entry.degree}</h3>
+            <p class="timeline__meta">
+              {entry.institution} · {entry.period}
+            </p>
+            {entry.detail && <p class="timeline__detail">{entry.detail}</p>}
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>Experience</h2>
+    <ul class="timeline">
+      {
+        experience.map((entry) => (
+          <li class="timeline__item">
+            <h3>{entry.role}</h3>
+            <p class="timeline__meta">
+              {entry.organisation} · {entry.period}
+            </p>
+            <p class="timeline__detail">{entry.detail}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>Skills & interests</h2>
+    {
+      Object.entries(skills).map(([label, items]) => (
+        <>
+          <h3>{label[0].toUpperCase() + label.slice(1)}</h3>
+          <ul class="skill-list">
+            {(items as readonly string[]).map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </>
+      ))
+    }
+
+    <h2>Elsewhere</h2>
+    <ul>
+      {
+        siteConfig.social.map((link) => (
+          <li>
+            <a href={link.url} target="_blank" rel="noopener noreferrer me">
+              <Icon name={link.network} class="icon-pad-right" />
+              {link.label} - {link.handle}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

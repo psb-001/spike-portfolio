@@ -1,0 +1,26 @@
+{
+  "name": "spike-portfolio",
+  "version": "1.0.0",
+  "description": "Personal portfolio for Prathamesh Bhujbal, built with Astro.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "fetch:now-watching": "node scripts/fetch-movie.mjs",
+    "prebuild": "node scripts/fetch-movie.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "7.3.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

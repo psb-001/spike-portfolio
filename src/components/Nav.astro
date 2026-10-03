@@ -1,0 +1,115 @@
+---
+/**
+ * Masthead + greedy navigation (Academic Pages `_includes/masthead.html`).
+ *
+ * Nav items come from `siteConfig.nav`. On small screens links that do not fit
+ * are moved into a "hidden links" dropdown, exactly like the Jekyll theme.
+ */
+import { siteConfig } from "../config/site";
+import { url } from "../utils/url";
+
+const current = Astro.url.pathname.replace(/\/index\.html$/, "/").replace(/\/$/, "");
+const isSelected = (href: string): boolean => {
+  const path = href.replace(/\/$/, "");
+  return href === "/" ? current === "" || current === "/" : current === path || current.startsWith(`${path}/`);
+};
+---
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <button type="button" aria-expanded="false" aria-controls="hidden-links" hidden>
+          <span class="navicon"></span>
+          <span class="u-visually-hidden">Menu</span>
+        </button>
+        <ul class="visible-links">
+          <li class:list={["masthead__menu-item", "masthead__menu-item--lg", "persist", isSelected("/") && "selected"]}>
+            <a href={url("/")} aria-current={isSelected("/") ? "page" : undefined}>{siteConfig.name}</a>
+          </li>
+          {
+            siteConfig.nav.map((item) => (
+              <li
+                class:list={[
+                  "masthead__menu-item",
+                  isSelected(item.url) && "selected",
+                ]}
+              >
+                <a
+                  href={url(item.url)}
+                  aria-current={isSelected(item.url) ? "page" : undefined}
+                >
+                  {item.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <ul id="hidden-links" class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script>
+  type NavList = HTMLUListElement;
+
+  /** Greedy nav: move links that overflow the masthead into a dropdown. */
+  const setupGreedyNav = () => {
+    const nav = document.querySelector<HTMLElement>("nav#site-nav");
+    if (!nav) return;
+
+    const visibleLinks = nav.querySelector<NavList>(".visible-links");
+    const hiddenLinks = nav.querySelector<NavList>(".hidden-links");
+    const button = nav.querySelector<HTMLButtonElement>("button");
+    if (!visibleLinks || !hiddenLinks || !button) return;
+
+    // The site name is `.persist` and is never moved into the dropdown.
+    const movableLinks = Array.from(
+      visibleLinks.querySelectorAll<HTMLLIElement>("li:not(.persist)"),
+    );
+
+    const usedWidth = () =>
+      Array.from(visibleLinks.children).reduce(
+        (total, item) => total + item.getBoundingClientRect().width,
+        0,
+      );
+
+    const fill = () => {
+      for (const link of movableLinks) visibleLinks.appendChild(link);
+      hiddenLinks.replaceChildren();
+      hiddenLinks.classList.add("hidden");
+      button.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+
+      const available = nav.getBoundingClientRect().width;
+      // `button` is absolutely positioned, so it does not affect `usedWidth()`.
+      while (usedWidth() > available && movableLinks.length > 0) {
+        const link = movableLinks.pop();
+        if (!link) break;
+        hiddenLinks.insertBefore(link, hiddenLinks.firstChild);
+      }
+
+      if (hiddenLinks.children.length > 0) {
+        hiddenLinks.classList.remove("hidden");
+        button.hidden = false;
+      }
+    };
+
+    let frame = 0;
+    const schedule = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(fill);
+    };
+
+    button.addEventListener("click", () => {
+      const isOpen = hiddenLinks.classList.toggle("hidden") === false;
+      button.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    window.addEventListener("resize", schedule, { passive: true });
+    schedule();
+  };
+
+  setupGreedyNav();
+</script>

@@ -1,0 +1,41 @@
+---
+import Base from "../layouts/Base.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import Icon from "../components/Icon.astro";
+import { siteConfig } from "../config/site";
+import { projects } from "../data/projects";
+import { url } from "../utils/url";
+
+const github = siteConfig.social.find((link) => link.network === "github")?.url ?? "https://github.com";
+---
+
+<Base title="Projects" description={`Projects built by ${siteConfig.name}.`}>
+  <header>
+    <h1 class="page__title">Projects</h1>
+    <p class="page__lead">Things I've built, mostly to scratch an itch.</p>
+  </header>
+
+  <section class="page__content">
+    <p>
+      Everything here is public and open source. Fork them, break them, ship
+      something better - just tell me what you built.
+    </p>
+    <p>
+      <a class="btn btn--inverse" href={github} target="_blank" rel="noopener noreferrer">
+        <Icon name="github" class="icon" />
+        See everything on GitHub
+      </a>
+    </p>
+
+    <ul class="projects__grid">
+      {projects.map((project) => <li><ProjectCard project={project} /></li>)}
+    </ul>
+  </section>
+
+  <footer class="page__meta">
+    <h4 class="page__meta-title">Want to collaborate?</h4>
+    <p>
+      <a href={url("/about")}>Get in touch →</a>
+    </p>
+  </footer>
+</Base>

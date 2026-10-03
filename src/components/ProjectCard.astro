@@ -1,0 +1,38 @@
+---
+/**
+ * Project card.
+ *
+ * The whole card is clickable (the link's ::after stretches over it) while
+ * staying a single, accessible link in the accessibility tree.
+ */
+import Icon from "./Icon.astro";
+import type { Project } from "../config/site";
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<article class="project-card">
+  <h3 class="project-card__name">
+    <a href={project.url} target="_blank" rel="noopener noreferrer">
+      {project.name}
+    </a>
+  </h3>
+  <p class="project-card__description">{project.description}</p>
+  <div class="project-card__footer">
+    <ul class="project-card__tech">
+      {project.tech.map((item) => <li>{item}</li>)}
+    </ul>
+    {
+      typeof project.stars === "number" && (
+        <span class="project-card__stars" title={`${project.stars} stars on GitHub`}>
+          <Icon name="star" size="12" />
+          {project.stars}
+        </span>
+      )
+    }
+  </div>
+</article>
