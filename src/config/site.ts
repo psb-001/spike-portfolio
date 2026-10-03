@@ -53,10 +53,10 @@ export const siteConfig = {
   /** One-line summary used for <title> suffixes and meta descriptions. */
   tagline: "Computer engineering student, movie nerd and open source builder.",
   bio:
-    "Computer engineering student, movie nerd, and open source builder. Currently studying at MES Mukundadaslohya College of Engineering and serving as Software Head at the CDC Club. I love building things that make life a little more beautiful.",
+    "Computer engineering student, movie nerd, and open source builder. Currently studying at MES Mukunddas Lohia College of Engineering and serving as Software Head at the CDC Club. I love building things that make life a little more beautiful.",
   /** Shown under the name in the sidebar. */
   location: "Pune, India",
-  college: "MES Mukundadaslohya College of Engineering",
+  college: "MES Mukunddas Lohia College of Engineering",
   role: "Software Head, CDC Club",
   internship: "DRDODIAT (details coming soon)",
   avatar: "/profile.jpg",
@@ -106,7 +106,7 @@ export const siteConfig = {
   education: [
     {
       degree: "B.E. Computer Engineering",
-      institution: "MES Mukundadaslohya College of Engineering",
+      institution: "MES Mukunddas Lohia College of Engineering",
       period: "2024 - Present",
       detail: "Second year undergraduate.",
     },
