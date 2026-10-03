@@ -87,10 +87,10 @@ export const siteConfig = {
    * fetched at build time by `scripts/fetch-movie.mjs`; the API key lives in
    * the TMDB_API_KEY environment variable and never reaches the browser.
    *
-   * tmdbId 1399 = Game of Thrones (tv).
+   * tmdbId 1100 = How I Met Your Mother (tv).
    */
   currentlyWatching: {
-    tmdbId: 1399,
+    tmdbId: 1100,
     type: "tv" as "movie" | "tv",
   },
 
