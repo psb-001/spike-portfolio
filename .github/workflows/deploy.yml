@@ -36,14 +36,13 @@ jobs:
 
       - run: npm run build
 
-      # The site is built with base: "/spike-portfolio", so dist/ has to be
-      # published into that sub-directory of gh-pages - otherwise every link
-      # would point one path segment too deep. The root index.html stub is kept
-      # so https://psb-001.github.io/ redirects to the portfolio.
+      # The site is built with base: "/spike-portfolio", so dist/ is published
+      # to the root of gh-pages - the base path handles the /spike-portfolio
+      # prefix. The root index.html stub is kept so https://psb-001.github.io/
+      # redirects to the portfolio.
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          destination_dir: spike-portfolio
           keep_files: true
           enable_jekyll: false
