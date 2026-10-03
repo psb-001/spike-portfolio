@@ -870,11 +870,19 @@ input[type="submit"],
 
 .page {
   @media (min-width: 925px) {
-    /* susy: span(10 of 12 last) + prefix(0.5 of 12) + suffix(2 of 12) */
-    width: calc(83.33333% - 0.048em);
+    /*
+     * Academic Pages `_sass/layout/_page.scss`:
+     *   span(10 of 12 last) + prefix(0.5 of 12) + suffix(2 of 12)
+     * Susy's prefix()/suffix() compile to *padding*, not margin. Values are the
+     * reference theme's compiled output (assets/css/main.css); using margins
+     * here moved the page box left on top of the fixed sidebar instead of
+     * insetting the content.
+     */
+    width: 83.0508474576%;
     float: right;
-    margin-left: calc(4.16667% - 0.03297em);
-    margin-right: calc(16.66667% - 0.03468em);
+    margin-right: 0;
+    padding-left: 4.2372881356%;
+    padding-right: 16.9491525424%;
   }
 }
 
@@ -994,9 +1002,10 @@ input[type="submit"],
 
 @media (min-width: 925px) {
   .sidebar {
-    /* susy: span(2 of 12) */
-    width: calc(16.66667% - 0.03468em);
+    /* Academic Pages `_sass/layout/_sidebar.scss`: span(2 of 12). */
+    width: 15.2542372881%;
     float: left;
+    margin-right: 1.6949152542%;
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
   }
@@ -1568,6 +1577,18 @@ th {
 .now-watching--compact {
   margin: 1.5em 0 0;
   padding: 0.85em;
+}
+
+/*
+ * Below 925px the sidebar collapses to the reference theme's compact
+ * avatar/name strip, and the page-body `.now-watching` copy is shown instead -
+ * so the sidebar copy would just duplicate it. The sidebar column only has
+ * room for it from 925px up.
+ */
+@media (width < 925px) {
+  .now-watching--compact {
+    display: none;
+  }
 }
 
 .now-watching--compact .now-watching__body {
